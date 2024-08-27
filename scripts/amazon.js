@@ -81,7 +81,16 @@ document.querySelectorAll('.js-add-to-cart')
                     quantity: 1
                 });
             }
-            console.log(cart);
+
+            let cartQuantity = 0;
+
+            cart.forEach((item) => {
+                cartQuantity += item.quantity;
+                console.log(`Product ID: ${item.productId}, Quantity: ${item.quantity}, Type of quantity: ${typeof item.quantity}`);
+            });
+
+            document.querySelector('.js-cart-quantity')
+            .innerHTML = cartQuantity;
     });
 });
 
