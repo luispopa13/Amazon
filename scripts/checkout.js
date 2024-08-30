@@ -1,4 +1,4 @@
-import {cart, removeFromCart, calculateCartQuantity, saveToStorage, updateCartQuantity} from '../data/cart.js';
+import {cart, removeFromCart, calculateCartQuantity, saveToStorage, updateCartQuantity, updateDeliveryOption} from '../data/cart.js';
 import {products} from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
@@ -33,7 +33,7 @@ cart.forEach((cartItem) => {
         'days'
     );
     const dateString = deliveryDate.format(
-        'dddd, MMMM D, YYYY'
+        'dddd, MMMM D'
     );
 
     cartSummaryHTML += `
@@ -90,7 +90,7 @@ function deliveryOptionsHTML(matchingProduct, cartItem){
             'days'
         );
         const dateString = deliveryDate.format(
-            'dddd, MMMM D, YYYY');
+            'dddd, MMMM D');
 
         const priceString = deliveryOption.priceCents
         === 0
@@ -102,7 +102,9 @@ function deliveryOptionsHTML(matchingProduct, cartItem){
         cartItem.deliveryOptionId;
 
        html += `
-         <div class="delivery-option">
+         <div class="delivery-option js-delivery-option"
+         data-product-id="${matchingProduct.id}"
+         data-delivery-option-id="${deliveryOption.id}">
             <input type="radio" 
             ${isChecked ? 'checked': ''}
             class="delivery-option-input" 
@@ -194,7 +196,7 @@ function saveQuantity(container, productId) {
         const cartQuantity = calculateCartQuantity();
         const cartCountElement = document.querySelector('.js-cart-count');
         if (cartCountElement) {
-            cartCountElement.innerHTML = cartQuantity;
+            cartCountElement.innerHTML = `${cartQuantity} items`;
         }
 
         container.classList.remove('is-editing-quantity');
@@ -202,5 +204,15 @@ function saveQuantity(container, productId) {
         alert("Please enter a quantity between 0 and 999.");
     }
 }
+
+
+document.querySelectorAll('.js-delivery-option')
+    .forEach((element) => {
+        element.addEventListener('click', () => {
+            const productId = element.dataset.productId;
+            const deliveryOptionId = element.dataset.deliveryOptionId;
+            updateDeliveryOption(productId, deliveryOptionId);
+        });
+    });
 
 
