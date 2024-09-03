@@ -143,7 +143,8 @@ document.querySelectorAll('.js-delete-link')
             if (cartCountElement) {
                 cartCountElement.innerHTML = `${cartQuantity} items`;
             }
-
+            
+            renderOrderSummary();
             renderPaymentSummary(); 
     });
  });
